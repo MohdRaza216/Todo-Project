@@ -1,8 +1,7 @@
-// import logo from './logo.svg';
 import './App.css';
-import Header from './myComponents/Header';
-import {Todos} from './myComponents/Todos';
-import {Footer} from './myComponents/Footer';
+import Header from './myComponents/Header.js';
+import {Todos} from './myComponents/Todos.js';
+import {Footer} from './myComponents/Footer.js';
 import React, { useState } from 'react';
 
 function App() {

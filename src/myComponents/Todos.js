@@ -1,5 +1,5 @@
 import React from 'react'
-import {TodoItem}  from "../myComponents/TodoItem";
+import {TodoItem}  from "../myComponents/TodoItem.js";
 
 export const Todos = (props) => {
   return (
@@ -14,4 +14,3 @@ export const Todos = (props) => {
   )
 }
 
-// export default Todos
