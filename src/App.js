@@ -3,6 +3,7 @@ import TodoInput from "./myComponents/TodoInput.js";
 import TodoList from "./myComponents/todoList.js";
 import "./App.css";
 import axios from "axios";
+import { Container, Row, Col, Card } from "react-bootstrap";
 
 function App() {
   const [todos, setTodos] = useState([]);
@@ -44,13 +45,30 @@ function App() {
 
   return (
     <div className="app">
-      <h1>To-Do List</h1>
-      <TodoInput addTodo={addTodo} />
-      <TodoList
-        todos={todos}
-        toggleComplete={(id, completed) => toggleComplete(id, completed)}
-        deleteTodo={deleteTodo}
-      />
+      <header className="header">
+        <h1>Todo List</h1>
+      </header>
+
+      <Container>
+        <Row className="justify-content-center">
+          <Col md={6}>
+            <Card className="shadow-lg">
+              <Card.Body>
+                <TodoInput addTodo={addTodo} />
+                {todos.length > 0 ? (
+                  <TodoList
+                    todos={todos}
+                    toggleComplete={(id, completed) => toggleComplete(id, completed)}
+                    deleteTodo={deleteTodo}
+                  />
+                ) : (
+                  <p className="text-center text-muted">No todos yet! Add one above.</p>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 }

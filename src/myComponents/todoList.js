@@ -1,35 +1,46 @@
 import React from "react";
-import PropTypes from "prop-types";
+import { ListGroup, Button, Form } from "react-bootstrap";
+import { FaTrash } from "react-icons/fa";
+import PropTypes from 'prop-types';
 
-function TodoList({ todos, toggleComplete, deleteTodo }) {
+const TodoList = ({ todos, toggleComplete, deleteTodo }) => {
     return (
-        <ul className="todo-list">
+        <ListGroup variant="flush">
             {todos.map((todo) => (
-                <li key={todo._id} className={todo.completed ? "completed" : ""}>
-                    <button
-                        onClick={() => toggleComplete(todo._id, !todo.completed)}
-                        onKeyUp={(e) => { if (e.key === 'Enter') toggleComplete(todo._id, !todo.completed); }}
-                        tabIndex="0"
+                <ListGroup.Item
+                    key={todo._id}
+                    className="todo-item d-flex justify-content-between align-items-center"
+                >
+                    <Form.Check
+                        type="checkbox"
+                        label={todo.task}
+                        checked={todo.completed}
+                        onChange={() => toggleComplete(todo._id, !todo.completed)}
+                        className="todo-checkbox"
+                    />
+                    <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => deleteTodo(todo._id)}
+                        className="todo-delete-btn"
                     >
-                        {todo.task}
-                    </button>
-                    <button onClick={() => deleteTodo(todo._id)}>Delete</button>
-                </li>
+                        <FaTrash />
+                    </Button>
+                </ListGroup.Item>
             ))}
-        </ul>
+        </ListGroup>
     );
-}
-
+};
 TodoList.propTypes = {
     todos: PropTypes.arrayOf(
         PropTypes.shape({
             _id: PropTypes.string.isRequired,
             task: PropTypes.string.isRequired,
-            completed: PropTypes.bool.isRequired,
+            completed: PropTypes.bool.isRequired
         })
     ).isRequired,
     toggleComplete: PropTypes.func.isRequired,
-    deleteTodo: PropTypes.func.isRequired,
+    deleteTodo: PropTypes.func.isRequired
 };
 
 export default TodoList;
