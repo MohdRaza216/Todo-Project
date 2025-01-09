@@ -1,45 +1,58 @@
-import './App.css';
-import Header from './myComponents/Header.js';
-import {Todos} from './myComponents/Todos.js';
-import {Footer} from './myComponents/Footer.js';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import TodoInput from "./myComponents/TodoInput.js";
+import TodoList from "./myComponents/todoList.js";
+import "./App.css";
+import axios from "axios";
 
 function App() {
-  const onDelete = (todo) => {
-    console.log("I am ondelete ", todo);
+  const [todos, setTodos] = useState([]);
 
-    setTodos(todos.filter((e)=>{
-      return e!==todo;
-    }));
-  }
+  // Fetch todos from the backend
+  useEffect(() => {
+    axios
+      .get("/api/todos")
+      .then((response) => setTodos(response.data))
+      .catch((err) => console.error(err));
+  }, []);
 
-  const [todos, setTodos] = useState([
-    {
-      srno:1,
-      title:"Go to theater",
-      desc:"You need to go to the theater to watch a movie.",
-    },
-    
-    {
-      srno:2,
-      title:"Go to market",
-      desc:"You need to go to the market and bring milk.",
-    },
-    
-    {
-      srno:3,
-      title:"Go to college",
-      desc:"You need to go to college to attend a lecture.",
-    },
-  ]);
+  const addTodo = (task) => {
+    axios
+      .post("/api/todos", { task })
+      .then((response) => setTodos([...todos, response.data]))
+      .catch((err) => console.error(err));
+  };
+
+  const toggleComplete = (id, completed) => {
+    axios
+      .put(`/api/todos/${id}`, { completed })
+      .then((response) => {
+        setTodos(
+          todos.map((todo) =>
+            todo._id === id ? { ...todo, completed: response.data.completed } : todo
+          )
+        );
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const deleteTodo = (id) => {
+    axios
+      .delete(`/api/todos/${id}`)
+      .then(() => setTodos(todos.filter((todo) => todo._id !== id)))
+      .catch((err) => console.error(err));
+  };
 
   return (
-    <>
-      <Header title="My Todo List" searchBar={true}/>
-      <Todos todos={todos} onDelete={onDelete}/>
-      <Footer/>
-    </>
-  ); 
+    <div className="app">
+      <h1>To-Do List</h1>
+      <TodoInput addTodo={addTodo} />
+      <TodoList
+        todos={todos}
+        toggleComplete={(id, completed) => toggleComplete(id, completed)}
+        deleteTodo={deleteTodo}
+      />
+    </div>
+  );
 }
 
 export default App;
